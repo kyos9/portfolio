@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,69 +7,105 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap');
   * { box-sizing: border-box; }
+  :root[data-theme="dark"] {
+    --bg: #0F1420; --panel: #161D2C; --border: #232B3D; --text: #E8EAED;
+    --muted: #6B7280; --muted2: #9CA3AF; --input-bg: #1A2028; --input-border: #2A3142;
+    --hover-border: #5B8DEF; --shadow-ring: #161D2C;
+  }
+  :root[data-theme="light"] {
+    --bg: #F5F6F8; --panel: #FFFFFF; --border: #E1E4EA; --text: #1B1F27;
+    --muted: #9096A3; --muted2: #5B6270; --input-bg: #F0F2F5; --input-border: #D9DCE3;
+    --hover-border: #4C7DDF; --shadow-ring: #FFFFFF;
+  }
   body {
-    margin: 0; background: #0F1420; color: #E8EAED;
+    margin: 0; background: var(--bg); color: var(--text);
     font-family: 'Inter', -apple-system, sans-serif;
-    min-height: 100vh;
+    min-height: 100vh; transition: background 0.15s, color 0.15s;
   }
   .display { font-family: 'Space Grotesk', sans-serif; }
   .mono { font-family: 'JetBrains Mono', monospace; }
   #app { max-width: 720px; margin: 0 auto; padding: 24px 16px 60px; }
-  header { margin-bottom: 20px; }
-  header .eyebrow { font-size: 12px; letter-spacing: 0.12em; color: #6B7280; text-transform: uppercase; }
+  header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+  header .eyebrow { font-size: 12px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
   header h1 { font-size: 26px; margin: 4px 0 16px; font-weight: 700; }
-  nav { display: flex; gap: 6px; border-bottom: 1px solid #232B3D; }
+  #theme-toggle {
+    background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    border-radius: 20px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif;
+    margin-top: 2px;
+  }
+  nav { display: flex; gap: 6px; border-bottom: 1px solid var(--border); }
   nav button {
-    background: none; border: none; color: #6B7280; font-family: 'Inter', sans-serif;
+    background: none; border: none; color: var(--muted); font-family: 'Inter', sans-serif;
     font-size: 14px; font-weight: 500; padding: 10px 14px; cursor: pointer; border-bottom: 2px solid transparent;
   }
-  nav button.active { color: #E8EAED; border-bottom-color: #5B8DEF; }
+  nav button.active { color: var(--text); border-bottom-color: #5B8DEF; }
   .panel { display: none; padding-top: 18px; }
   .panel.active { display: block; }
-  .card { background: #161D2C; border: 1px solid #232B3D; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
   input, textarea, select {
-    background: #1A2028; border: 1px solid #2A3142; color: #E8EAED;
+    background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text);
     border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family: inherit; outline: none; width: 100%;
   }
-  input:focus, textarea:focus, select:focus { border-color: #5B8DEF; }
-  label { font-size: 12px; color: #9CA3AF; display: block; margin-bottom: 5px; }
+  input:focus, textarea:focus, select:focus { border-color: var(--hover-border); }
+  label { font-size: 12px; color: var(--muted2); display: block; margin-bottom: 5px; }
   .field { margin-bottom: 10px; }
-  .row { display: flex; gap: 8px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
   button.btn {
-    background: #1A2028; border: 1px solid #2A3142; color: #E8EAED; border-radius: 8px;
+    background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); border-radius: 8px;
     padding: 8px 14px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif;
   }
-  button.btn:hover { border-color: #5B8DEF; }
+  button.btn:hover { border-color: var(--hover-border); }
   button.btn-primary { background: #5B8DEF; border-color: #5B8DEF; color: #0F1420; font-weight: 600; }
   button.btn-primary:hover { background: #4C7DDF; }
   button.btn-primary:disabled { opacity: 0.5; cursor: default; }
-  .x { background: none; border: none; color: #6B7280; cursor: pointer; font-size: 15px; padding: 2px 6px; }
+  .x { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 2px 6px; }
   .x:hover { color: #F97066; }
-  .muted { color: #6B7280; font-size: 12px; }
-  .analysis-result { white-space: pre-wrap; font-size: 13.5px; line-height: 1.6; color: #D1D5DB; margin-top: 10px; }
-  .history-item { padding: 8px 0; border-top: 1px solid #1F2635; cursor: pointer; }
+  .muted { color: var(--muted); font-size: 12px; }
+  .analysis-result { white-space: pre-wrap; font-size: 13.5px; line-height: 1.6; color: var(--muted2); margin-top: 10px; }
+  .history-item { padding: 8px 0; border-top: 1px solid var(--border); cursor: pointer; }
   .history-item:hover { color: #5B8DEF; }
-  .badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #232B3D; color: #9CA3AF; margin-left: 6px; }
+  .badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--input-bg); color: var(--muted2); margin-left: 6px; }
   .error { color: #F97066; font-size: 12.5px; margin-top: 8px; }
-  .beam { position: relative; height: 6px; background: #232B3D; border-radius: 3px; margin: 12px 0 6px; }
-  .beam .mid { position: absolute; left: 50%; top: -3px; width: 2px; height: 12px; background: #4B5563; }
-  .beam .mark { position: absolute; top: -5px; width: 10px; height: 16px; border-radius: 5px; transform: translateX(-50%); box-shadow: 0 0 0 2px #161D2C; }
-  .banner { background: linear-gradient(135deg, rgba(249,112,102,0.12), rgba(249,112,102,0.04)); border: 1px solid rgba(249,112,102,0.35); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
+  .hint { color: #34D399; font-size: 12px; margin-top: 6px; }
+  .beam { position: relative; height: 6px; background: var(--input-bg); border-radius: 3px; margin: 12px 0 6px; }
+  .beam .mid { position: absolute; left: 50%; top: -3px; width: 2px; height: 12px; background: var(--muted); }
+  .beam .mark { position: absolute; top: -5px; width: 10px; height: 16px; border-radius: 5px; transform: translateX(-50%); box-shadow: 0 0 0 2px var(--shadow-ring); }
+  .banner { background: linear-gradient(135deg, rgba(249,112,102,0.14), rgba(249,112,102,0.04)); border: 1px solid rgba(249,112,102,0.35); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
 </style>
 </head>
 <body>
 <div id="app">
   <header>
-    <div class="eyebrow">Personal Studio</div>
-    <h1 class="display">포트폴리오 스튜디오</h1>
-    <nav>
-      <button class="tab-btn" data-tab="portfolio">포트폴리오 관리</button>
-      <button class="tab-btn active" data-tab="analysis">종목분석</button>
-      <button class="tab-btn" data-tab="settings">설정</button>
-    </nav>
+    <div>
+      <div class="eyebrow">Personal Studio</div>
+      <h1 class="display">포트폴리오 스튜디오</h1>
+    </div>
+    <button id="theme-toggle">🌙 다크</button>
   </header>
+  <nav>
+    <button class="tab-btn active" data-tab="portfolio">포트폴리오 관리</button>
+    <button class="tab-btn" data-tab="analysis">종목분석</button>
+    <button class="tab-btn" data-tab="settings">설정</button>
+  </nav>
 
-  <section id="panel-analysis" class="panel active">
+  <section id="panel-portfolio" class="panel active">
+    <div class="card">
+      <div class="display" id="pf-total" style="font-size:26px; font-weight:700;">0원</div>
+      <div id="pf-target-warning" class="muted" style="margin-top:4px;"></div>
+    </div>
+    <div id="pf-banner"></div>
+    <div id="pf-categories"></div>
+    <div id="pf-addcat-area"></div>
+    <div class="card">
+      <label>리밸런싱 기준 (±%p)</label>
+      <div class="row" style="align-items:center; flex-wrap:nowrap;">
+        <input type="range" id="pf-threshold" min="1" max="15" value="5" style="flex:1;" />
+        <span id="pf-threshold-val" class="mono" style="width:40px;">±5%p</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-analysis" class="panel">
     <div class="card">
       <div class="field">
         <label>종목명 / 티커</label>
@@ -99,33 +135,21 @@
     </div>
   </section>
 
-  <section id="panel-portfolio" class="panel">
-    <div class="card">
-      <div class="display" id="pf-total" style="font-size:26px; font-weight:700;">0원</div>
-      <div id="pf-target-warning" class="muted" style="margin-top:4px;"></div>
-    </div>
-    <div id="pf-banner"></div>
-    <div id="pf-categories"></div>
-    <div id="pf-addcat-area"></div>
-    <div class="card">
-      <label>리밸런싱 기준 (±%p)</label>
-      <div class="row" style="align-items:center;">
-        <input type="range" id="pf-threshold" min="1" max="15" value="5" style="flex:1;" />
-        <span id="pf-threshold-val" class="mono" style="width:40px;">±5%p</span>
-      </div>
-    </div>
-  </section>
-
   <section id="panel-settings" class="panel">
     <div class="card">
-      <div class="display" style="font-weight:700; margin-bottom:10px;">API 키</div>
-      <p class="muted">키는 이 브라우저(localStorage)에만 저장되고, 선택한 AI 제공사 서버로만 직접 전송됩니다. 외부 서버로 전송되지 않습니다.</p>
+      <div class="display" style="font-weight:700; margin-bottom:10px;">AI 분석 API 키</div>
+      <p class="muted">키는 이 브라우저(localStorage)에만 저장되고, 선택한 제공사 서버로만 직접 전송됩니다.</p>
       <div class="field"><label>Anthropic (Claude) API 키</label><input id="key-anthropic" type="password" /></div>
       <div class="field"><label>Google (Gemini) API 키</label><input id="key-gemini" type="password" /></div>
       <div class="field"><label>OpenAI (GPT) API 키</label><input id="key-openai" type="password" /></div>
+      <p class="muted" style="margin-top:4px;">일부 환경에서는 OpenAI·Anthropic이 브라우저 직접 호출(CORS)을 막을 수 있어요. 오류가 나면 다른 모델로 시도해보세요.</p>
+    </div>
+    <div class="card">
+      <div class="display" style="font-weight:700; margin-bottom:10px;">시세 조회 API 키 (Twelve Data)</div>
+      <p class="muted">종목 추가 시 코드+수량으로 자동 가격을 불러오는 데 사용돼요. <a href="https://twelvedata.com/" target="_blank" style="color:#5B8DEF;">twelvedata.com</a>에서 무료로 발급받을 수 있어요. 미국 주식은 대체로 잘 되지만, 한국 주식(KRX)은 무료 플랜에서 제공되지 않을 수 있습니다 — 그럴 땐 평가금액을 직접 입력해주세요.</p>
+      <div class="field"><label>Twelve Data API 키</label><input id="key-twelvedata" type="password" /></div>
       <button class="btn btn-primary" id="save-keys">저장</button>
       <span id="save-keys-msg" class="muted" style="margin-left:8px;"></span>
-      <p class="muted" style="margin-top:12px;">참고: 일부 브라우저/네트워크 환경에서는 OpenAI·Anthropic API가 브라우저 직접 호출(CORS)을 막을 수 있습니다. 오류가 발생하면 다른 모델로 시도해보세요.</p>
     </div>
   </section>
 </div>
@@ -135,6 +159,21 @@ const PALETTE = ["#5B8DEF", "#A78BFA", "#34D399", "#F5A623", "#F97066", "#22D3EE
 const uid = () => Math.random().toString(36).slice(2, 10);
 const fmtWon = (n) => new Intl.NumberFormat("ko-KR").format(Math.round(n || 0)) + "원";
 const fmtPct = (n) => (Number.isFinite(n) ? n.toFixed(1) : "0.0") + "%";
+
+// ---------- theme ----------
+(function initTheme() {
+  const saved = localStorage.getItem("pf_theme") || "dark";
+  document.documentElement.setAttribute("data-theme", saved);
+  const btn = document.getElementById("theme-toggle");
+  btn.textContent = saved === "dark" ? "🌙 다크" : "☀️ 라이트";
+  btn.addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme");
+    const next = cur === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("pf_theme", next);
+    btn.textContent = next === "dark" ? "🌙 다크" : "☀️ 라이트";
+  });
+})();
 
 // ---------- tabs ----------
 document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -146,7 +185,7 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
   });
 });
 
-// ---------- settings ----------
+// ---------- settings / keys ----------
 function loadKeys() {
   try { return JSON.parse(localStorage.getItem("pf_api_keys") || "{}"); } catch { return {}; }
 }
@@ -155,6 +194,7 @@ function saveKeys() {
     anthropic: document.getElementById("key-anthropic").value.trim(),
     gemini: document.getElementById("key-gemini").value.trim(),
     openai: document.getElementById("key-openai").value.trim(),
+    twelvedata: document.getElementById("key-twelvedata").value.trim(),
   };
   localStorage.setItem("pf_api_keys", JSON.stringify(keys));
   document.getElementById("save-keys-msg").textContent = "저장됨";
@@ -165,6 +205,7 @@ function saveKeys() {
   document.getElementById("key-anthropic").value = k.anthropic || "";
   document.getElementById("key-gemini").value = k.gemini || "";
   document.getElementById("key-openai").value = k.openai || "";
+  document.getElementById("key-twelvedata").value = k.twelvedata || "";
   document.getElementById("save-keys").addEventListener("click", saveKeys);
 })();
 
@@ -178,11 +219,7 @@ async function callAnthropic(key, prompt) {
       "anthropic-version": "2023-06-01",
       "anthropic-dangerous-direct-browser-access": "true",
     },
-    body: JSON.stringify({
-      model: "claude-sonnet-5",
-      max_tokens: 1200,
-      messages: [{ role: "user", content: prompt }],
-    }),
+    body: JSON.stringify({ model: "claude-sonnet-5", max_tokens: 1200, messages: [{ role: "user", content: prompt }] }),
   });
   if (!res.ok) throw new Error(`Claude API 오류 (${res.status}): ${await res.text()}`);
   const data = await res.json();
@@ -190,8 +227,7 @@ async function callAnthropic(key, prompt) {
 }
 async function callGemini(key, prompt) {
   const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
   });
   if (!res.ok) throw new Error(`Gemini API 오류 (${res.status}): ${await res.text()}`);
@@ -200,8 +236,7 @@ async function callGemini(key, prompt) {
 }
 async function callOpenAI(key, prompt) {
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
+    method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
     body: JSON.stringify({ model: "gpt-4o", messages: [{ role: "user", content: prompt }] }),
   });
   if (!res.ok) throw new Error(`OpenAI API 오류 (${res.status}): ${await res.text()}`);
@@ -209,9 +244,7 @@ async function callOpenAI(key, prompt) {
   return data.choices?.[0]?.message?.content || "(응답 없음)";
 }
 
-function loadHistory() {
-  try { return JSON.parse(localStorage.getItem("pf_analysis_history") || "[]"); } catch { return []; }
-}
+function loadHistory() { try { return JSON.parse(localStorage.getItem("pf_analysis_history") || "[]"); } catch { return []; } }
 function saveHistory(list) { localStorage.setItem("pf_analysis_history", JSON.stringify(list)); }
 
 function renderHistory() {
@@ -220,11 +253,9 @@ function renderHistory() {
   if (list.length === 0) { el.innerHTML = '<div class="muted">아직 분석 기록이 없어요.</div>'; return; }
   el.innerHTML = list.slice().reverse().map(item => `
     <div class="history-item" data-id="${item.id}">
-      <span class="mono" style="color:#6B7280; font-size:11px;">${new Date(item.date).toLocaleString("ko-KR")}</span>
-      <b>${item.ticker}</b>
-      <span class="badge">${item.provider}</span>
-    </div>
-  `).join("");
+      <span class="mono" style="color:var(--muted); font-size:11px;">${new Date(item.date).toLocaleString("ko-KR")}</span>
+      <b>${item.ticker}</b><span class="badge">${item.provider}</span>
+    </div>`).join("");
   el.querySelectorAll(".history-item").forEach(node => {
     node.addEventListener("click", () => {
       const item = list.find(i => i.id === node.dataset.id);
@@ -247,11 +278,9 @@ document.getElementById("an-run").addEventListener("click", async () => {
   const keys = loadKeys();
   const key = keys[provider];
   if (!key) { errorEl.textContent = "설정 탭에서 해당 모델의 API 키를 먼저 입력해주세요."; return; }
-
   const prompt = `당신은 투자 리서치 애널리스트입니다. 다음 종목을 분석해주세요: "${ticker}".
 ${context ? "추가 요청사항: " + context : ""}
 사업 개요, 최근 실적 흐름(알고 있는 범위 내에서), 밸류에이션 관점, 주요 리스크, 투자 시 체크포인트를 한국어로 간결하게 정리해주세요. 실시간 시세나 확인되지 않은 수치는 추정임을 밝혀주세요.`;
-
   btn.disabled = true; btn.textContent = "분석 중...";
   try {
     let result;
@@ -261,14 +290,45 @@ ${context ? "추가 요청사항: " + context : ""}
     resultEl.textContent = result;
     const history = loadHistory();
     history.push({ id: uid(), ticker, provider, result, date: Date.now() });
-    saveHistory(history);
-    renderHistory();
+    saveHistory(history); renderHistory();
   } catch (e) {
     errorEl.textContent = e.message || "요청 중 오류가 발생했어요.";
   } finally {
     btn.disabled = false; btn.textContent = "분석 요청";
   }
 });
+
+// ---------- auto price lookup ----------
+function detectMarket(code) {
+  const c = code.trim().toUpperCase();
+  if (/^\d{6}$/.test(c)) return "KR";
+  if (/^[A-Z.]{1,6}$/.test(c)) return "US";
+  return null;
+}
+async function twelveDataPrice(symbol, key) {
+  const res = await fetch(`https://api.twelvedata.com/price?symbol=${encodeURIComponent(symbol)}&apikey=${key}`);
+  const data = await res.json();
+  if (data.status === "error" || !data.price) throw new Error(data.message || "가격을 찾을 수 없어요.");
+  return parseFloat(data.price);
+}
+let cachedFxRate = null, cachedFxTime = 0;
+async function getUsdKrwRate(key) {
+  if (cachedFxRate && Date.now() - cachedFxTime < 60 * 60 * 1000) return cachedFxRate;
+  const rate = await twelveDataPrice("USD/KRW", key);
+  cachedFxRate = rate; cachedFxTime = Date.now();
+  return rate;
+}
+async function fetchAutoValue(code, qty, key) {
+  const market = detectMarket(code);
+  if (!market) throw new Error("종목코드 형식을 인식할 수 없어요 (한국: 6자리 숫자, 미국: 알파벳 티커).");
+  const symbol = market === "KR" ? `${code.trim()}:KRX` : code.trim().toUpperCase();
+  const price = await twelveDataPrice(symbol, key);
+  if (market === "US") {
+    const fx = await getUsdKrwRate(key);
+    return { value: price * qty * fx, note: `${price} USD × ${qty} × ${fx.toFixed(1)}원/USD` };
+  }
+  return { value: price * qty, note: `${price.toLocaleString()}원 × ${qty}주` };
+}
 
 // ---------- portfolio ----------
 let categories = [];
@@ -281,8 +341,7 @@ function loadPortfolio() {
   try {
     const data = JSON.parse(localStorage.getItem("pf_portfolio_data") || "null");
     if (data) {
-      categories = data.categories || [];
-      holdings = data.holdings || [];
+      categories = data.categories || []; holdings = data.holdings || [];
       threshold = typeof data.threshold === "number" ? data.threshold : 5;
     } else {
       categories = [
@@ -293,16 +352,13 @@ function loadPortfolio() {
     }
   } catch {}
 }
-function savePortfolio() {
-  localStorage.setItem("pf_portfolio_data", JSON.stringify({ categories, holdings, threshold }));
-}
+function savePortfolio() { localStorage.setItem("pf_portfolio_data", JSON.stringify({ categories, holdings, threshold })); }
 
 function renderPortfolio() {
   const totalValue = holdings.reduce((s, h) => s + (Number(h.value) || 0), 0);
   const targetSum = categories.reduce((s, c) => s + (Number(c.target) || 0), 0);
   document.getElementById("pf-total").textContent = fmtWon(totalValue);
-  document.getElementById("pf-target-warning").textContent =
-    targetSum !== 100 ? `⚠ 목표 비율 합계가 ${targetSum.toFixed(1)}% 입니다` : "";
+  document.getElementById("pf-target-warning").textContent = targetSum !== 100 ? `⚠ 목표 비율 합계가 ${targetSum.toFixed(1)}% 입니다` : "";
 
   const catStats = categories.map(c => {
     const catHoldings = holdings.filter(h => h.categoryId === c.id);
@@ -316,12 +372,11 @@ function renderPortfolio() {
   });
 
   const flagged = catStats.filter(c => c.needsRebalance);
-  const bannerEl = document.getElementById("pf-banner");
-  bannerEl.innerHTML = flagged.length === 0 ? "" : `
+  document.getElementById("pf-banner").innerHTML = flagged.length === 0 ? "" : `
     <div class="banner">
       <div style="font-size:13px; font-weight:600; color:#F97066; margin-bottom:6px;">리밸런싱 필요 (${threshold}%p 이상 이탈)</div>
       ${flagged.map(c => `
-        <div style="font-size:12.5px; color:#D1D5DB; margin-bottom:3px; display:flex; justify-content:space-between;">
+        <div style="font-size:12.5px; color:var(--muted2); margin-bottom:3px; display:flex; justify-content:space-between;">
           <span><b style="color:${c.color}">${c.name}</b> 목표 ${fmtPct(c.target)} → 현재 ${fmtPct(c.actualPct)}</span>
           <span class="mono" style="color:${c.diffValue > 0 ? '#F97066' : '#34D399'}">${c.diffValue > 0 ? "매도 " : "매수 "}${fmtWon(Math.abs(c.diffValue))}</span>
         </div>`).join("")}
@@ -335,34 +390,39 @@ function renderPortfolio() {
         <div style="display:flex; align-items:center; gap:8px;">
           <span style="width:8px;height:8px;border-radius:4px;background:${c.color};display:inline-block;"></span>
           <span class="display" style="font-weight:700; font-size:15px;">${c.name}</span>
-          <input class="mono cat-target" data-id="${c.id}" value="${c.target}" style="width:44px; background:transparent; border:none; color:#6B7280; font-size:12px; text-align:right;" />
+          <input class="mono cat-target" data-id="${c.id}" value="${c.target}" style="width:44px; background:transparent; border:none; color:var(--muted); font-size:12px; text-align:right;" />
           <span class="muted">% 목표</span>
         </div>
         <button class="x cat-remove" data-id="${c.id}">×</button>
       </div>
-      <div class="beam">
-        <div class="mid"></div>
-        <div class="mark" style="left:${beamPos}%; background:${c.needsRebalance ? '#F97066' : c.color};"></div>
-      </div>
+      <div class="beam"><div class="mid"></div><div class="mark" style="left:${beamPos}%; background:${c.needsRebalance ? '#F97066' : c.color};"></div></div>
       <div style="display:flex; justify-content:space-between; font-size:12px;">
-        <span class="mono" style="color:#9CA3AF;">실제 ${fmtPct(c.actualPct)}</span>
-        <span class="mono" style="color:${c.deviation > 0 ? '#F5A623' : c.deviation < 0 ? '#5B8DEF' : '#6B7280'};">${c.deviation > 0 ? "+" : ""}${fmtPct(c.deviation)}</span>
+        <span class="mono" style="color:var(--muted2);">실제 ${fmtPct(c.actualPct)}</span>
+        <span class="mono" style="color:${c.deviation > 0 ? '#F5A623' : c.deviation < 0 ? '#5B8DEF' : 'var(--muted)'};">${c.deviation > 0 ? "+" : ""}${fmtPct(c.deviation)}</span>
       </div>
       <button class="btn toggle-holdings" data-id="${c.id}" style="font-size:12px; padding:4px 10px; margin-top:8px;">종목 ${c.catHoldings.length}개 ${openCat[c.id] ? "숨기기 ▲" : "보기 ▼"}</button>
       ${openCat[c.id] ? `
         <div style="margin-top:8px;">
           ${c.catHoldings.map(h => `
-            <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-top:1px solid #1F2635;">
-              <span style="flex:1; font-size:13px; color:#D1D5DB;">${h.name}</span>
+            <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-top:1px solid var(--border);">
+              <span style="flex:1; font-size:13px; color:var(--muted2);">${h.name}</span>
               <input class="mono holding-value" data-id="${h.id}" value="${h.value}" style="width:110px; text-align:right;" />
               <span class="muted" style="width:42px; text-align:right;">${c.actualValue > 0 ? fmtPct((h.value / c.actualValue) * 100) : "0%"}</span>
               <button class="x holding-remove" data-id="${h.id}">×</button>
             </div>`).join("")}
           ${addingHolding === c.id ? `
-            <div class="row" style="margin-top:8px;">
-              <input id="new-holding-name" placeholder="종목명" />
-              <input id="new-holding-value" placeholder="평가금액" style="width:110px;" />
-              <button class="btn btn-primary confirm-add-holding" data-id="${c.id}">추가</button>
+            <div class="row" style="margin-top:8px; flex-direction:column;">
+              <div class="row">
+                <input id="new-holding-name" placeholder="종목명" style="flex:1;" />
+                <input id="new-holding-code" placeholder="코드(선택, 예 005930/AAPL)" style="width:150px;" />
+              </div>
+              <div class="row" style="align-items:center;">
+                <input id="new-holding-qty" placeholder="수량(선택)" style="width:90px;" />
+                <button class="btn fetch-price" data-id="${c.id}">시세조회</button>
+                <input id="new-holding-value" placeholder="평가금액" style="width:120px;" />
+                <button class="btn btn-primary confirm-add-holding" data-id="${c.id}">추가</button>
+              </div>
+              <div id="fetch-price-msg" class="muted"></div>
             </div>` : `
             <button class="btn start-add-holding" data-id="${c.id}" style="font-size:12px; margin-top:8px; padding:4px 10px;">+ 종목 추가</button>
           `}
@@ -385,8 +445,7 @@ function renderPortfolio() {
 function attachPortfolioEvents() {
   document.querySelectorAll(".cat-target").forEach(el => el.addEventListener("change", e => {
     const c = categories.find(c => c.id === e.target.dataset.id);
-    c.target = parseFloat(e.target.value) || 0;
-    savePortfolio(); renderPortfolio();
+    c.target = parseFloat(e.target.value) || 0; savePortfolio(); renderPortfolio();
   }));
   document.querySelectorAll(".cat-remove").forEach(el => el.addEventListener("click", e => {
     const id = e.target.dataset.id;
@@ -395,22 +454,34 @@ function attachPortfolioEvents() {
     savePortfolio(); renderPortfolio();
   }));
   document.querySelectorAll(".toggle-holdings").forEach(el => el.addEventListener("click", e => {
-    const id = e.target.dataset.id;
-    openCat[id] = !openCat[id];
-    renderPortfolio();
+    openCat[e.target.dataset.id] = !openCat[e.target.dataset.id]; renderPortfolio();
   }));
   document.querySelectorAll(".holding-value").forEach(el => el.addEventListener("change", e => {
     const h = holdings.find(h => h.id === e.target.dataset.id);
-    h.value = parseFloat(e.target.value.replace(/,/g, "")) || 0;
-    savePortfolio(); renderPortfolio();
+    h.value = parseFloat(e.target.value.replace(/,/g, "")) || 0; savePortfolio(); renderPortfolio();
   }));
   document.querySelectorAll(".holding-remove").forEach(el => el.addEventListener("click", e => {
-    holdings = holdings.filter(h => h.id !== e.target.dataset.id);
-    savePortfolio(); renderPortfolio();
+    holdings = holdings.filter(h => h.id !== e.target.dataset.id); savePortfolio(); renderPortfolio();
   }));
   document.querySelectorAll(".start-add-holding").forEach(el => el.addEventListener("click", e => {
-    addingHolding = e.target.dataset.id;
-    renderPortfolio();
+    addingHolding = e.target.dataset.id; renderPortfolio();
+  }));
+  document.querySelectorAll(".fetch-price").forEach(el => el.addEventListener("click", async e => {
+    const code = document.getElementById("new-holding-code").value.trim();
+    const qty = parseFloat(document.getElementById("new-holding-qty").value);
+    const msgEl = document.getElementById("fetch-price-msg");
+    if (!code || !Number.isFinite(qty)) { msgEl.textContent = "코드와 수량을 입력해주세요."; msgEl.className = "error"; return; }
+    const key = loadKeys().twelvedata;
+    if (!key) { msgEl.textContent = "설정 탭에서 Twelve Data API 키를 먼저 입력해주세요."; msgEl.className = "error"; return; }
+    msgEl.textContent = "조회 중..."; msgEl.className = "muted";
+    try {
+      const { value, note } = await fetchAutoValue(code, qty, key);
+      document.getElementById("new-holding-value").value = Math.round(value);
+      msgEl.textContent = "조회 성공: " + note; msgEl.className = "hint";
+    } catch (err) {
+      msgEl.textContent = "조회 실패 (" + err.message + ") — 평가금액을 직접 입력해주세요.";
+      msgEl.className = "error";
+    }
   }));
   document.querySelectorAll(".confirm-add-holding").forEach(el => el.addEventListener("click", e => {
     const categoryId = e.target.dataset.id;
@@ -418,8 +489,7 @@ function attachPortfolioEvents() {
     const value = parseFloat(document.getElementById("new-holding-value").value.replace(/,/g, ""));
     if (!name || !Number.isFinite(value)) return;
     holdings.push({ id: uid(), categoryId, name, value });
-    addingHolding = null;
-    savePortfolio(); renderPortfolio();
+    addingHolding = null; savePortfolio(); renderPortfolio();
   }));
   const addCatBtn = document.getElementById("confirm-add-cat");
   if (addCatBtn) addCatBtn.addEventListener("click", () => {
